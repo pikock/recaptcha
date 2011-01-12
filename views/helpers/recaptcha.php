@@ -85,7 +85,7 @@ class RecaptchaHelper extends AppHelper {
 			return $View->element($element, $elementOptions);
 		}
 		
-		if (!$this->params['isAjax']) {
+		if (empty($this->params['isAjax'])) {
 			$script = '<script type="text/javascript" src="'. $server . '/challenge?k=' . $publicKey . '"></script>
 				<noscript>
 					<iframe src="'. $server . '/noscript?k=' . $publicKey . '" height="300" width="500" frameborder="0"></iframe><br/>

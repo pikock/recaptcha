@@ -9,11 +9,11 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-App::import('Lib', 'AppTestCase');
 App::import('Core', 'Controller');
-App::import('Component', 'Recaptcha.Recaptcha');
+App::import('Component', array('Recaptcha.Recaptcha', 'RequestHandler'));
 
 Mock::generatePartial('Recaptcha', 'RecaptchaMock', array('_getApiResponse'));
+Mock::generate('RequestHandlerComponent');
 
 if (!class_exists('ArticlesTestController')) {
 	class ArticleTestController extends Controller {
@@ -39,7 +39,7 @@ if (!class_exists('RecaptchaTestArticle')) {
  * @package recaptcha
  * @subpackage recaptcha.tests.cases.components
  */
-class RecaptchaTestCase extends AppTestCase {
+class RecaptchaTestCase extends CakeTestCase {
 /**
  * fixtures property
  *
@@ -55,9 +55,10 @@ class RecaptchaTestCase extends AppTestCase {
 	function startTest() {
 		$this->Controller = new ArticleTestController();
 		$this->Controller->constructClasses();
-		//$this->Controller->modelClass = 'RecaptchaTestArticle';
 		$this->Controller->Component->init($this->Controller);
 		$this->Controller->Component->initialize($this->Controller);
+
+		$this->Controller->Recaptcha->RequestHandler = $this->RequestHandler = new MockRequestHandlerComponent();
 	}
 
 /**
@@ -79,6 +80,23 @@ class RecaptchaTestCase extends AppTestCase {
 		$this->Controller->params['form']['recaptcha_challenge_field'] = 'something';
 		$this->Controller->params['form']['recaptcha_response_field'] = 'something';
 		$this->assertFalse($this->Controller->Recaptcha->verify());
+	}
+
+/**
+ * Test before render callback
+ *
+ * @return void
+ */
+	public function testBeforeRender() {
+		$this->RequestHandler->setReturnValueAt(0, 'isAjax', false);
+		$this->assertFalse(isset($this->Controller->params['isAjax']));
+		$this->Controller->Recaptcha->beforeRender($this->Controller);
+		$this->assertFalse(isset($this->Controller->params['isAjax']));
+
+		$this->RequestHandler->setReturnValueAt(1, 'isAjax', true);
+		$this->Controller->Recaptcha->beforeRender($this->Controller);
+		$this->assertTrue(isset($this->Controller->params['isAjax']));
+		$this->assertTrue($this->Controller->params['isAjax']);
 	}
 
 }

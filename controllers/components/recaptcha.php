@@ -25,6 +25,13 @@ class RecaptchaComponent extends Object {
 	public $Controller = null;
 
 /**
+ * Components
+ *
+ * @var array
+ */
+	public $components = array('RequestHandler');
+
+/**
  * Recaptcha API Url
  *
  * @var string
@@ -93,6 +100,18 @@ class RecaptchaComponent extends Object {
 					$this->Controller->{$modelClass}->recaptchaError = $this->error;
 				}
 			}
+		}
+	}
+
+/**
+ * Before render Callback
+ *
+ * @param Controller $Controller
+ * @return void
+ */
+	public function beforeRender(Controller $Controller) {
+		if (!array_key_exists('isAjax', $Controller->params) && $this->RequestHandler->isAjax()) {
+			$Controller->params['isAjax'] = true;
 		}
 	}
 
