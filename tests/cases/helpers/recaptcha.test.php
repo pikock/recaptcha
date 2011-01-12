@@ -10,7 +10,7 @@
  */
 
 App::import('Core', array('Helper', 'AppHelper', 'ClassRegistry', 'Controller', 'Model'));
-App::import('Helper', array('Recaptcha.Recaptcha', 'Html'));
+App::import('Helper', array('Recaptcha.Recaptcha', 'Html', 'Form'));
 
 /**
  * PostsTestController
@@ -54,6 +54,7 @@ class RecaptchaHelperTest extends CakeTestCase {
 		$view = new View(new PostsTestController());
 		$this->Recaptcha = new RecaptchaHelper();
 		$this->Recaptcha->Html = new HtmlHelper();
+		$this->Recaptcha->Form = new FormHelper();
 		ClassRegistry::addObject('view', $view);
 	}
 
