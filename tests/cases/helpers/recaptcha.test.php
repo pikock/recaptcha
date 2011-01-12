@@ -73,8 +73,8 @@ class RecaptchaHelperTest extends CakeTestCase {
  * @return void
  */
 	function testSignupUrl() {
-		$result = $this->Recaptcha->signupUrl('test');
-		$expected = 'http://recaptcha.net/api/getkey?domain=' . WWW_ROOT . '&amp;app=test' ;
+		$result = $this->Recaptcha->signupUrl();
+		$expected = 'https://www.google.com/recaptcha/admin/list';
 		$this->assertIdentical($expected, $result);
 	}
 

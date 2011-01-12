@@ -32,6 +32,13 @@ class RecaptchaHelper extends AppHelper {
 	public $apiUrl = 'http://www.google.com/recaptcha/api';
 
 /**
+ * Signup Url
+ *
+ * @var string
+ */
+	public $signupUrl = 'https://www.google.com/recaptcha/admin/list';
+
+/**
  * View helpers
  *
  * @var array
@@ -125,10 +132,11 @@ class RecaptchaHelper extends AppHelper {
 /**
  * Recaptcha signup URL
  *
+ * @deprecated Use RecaptchaHelper::signupUrl attribute instead
  * @return string
  */
-	public function signupUrl($appname = null) {
-		return "http://recaptcha.net/api/getkey?domain=" . WWW_ROOT . '&amp;app=' . urlencode($appName);
+	public function signupUrl() {
+		return $this->signupUrl;
 	}
 
 /**
