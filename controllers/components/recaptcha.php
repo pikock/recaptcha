@@ -88,7 +88,7 @@ class RecaptchaComponent extends Object {
 	}
 
  /**
- * Callback
+ * startup
  *
  * @param object Controller object
  */
@@ -110,6 +110,24 @@ class RecaptchaComponent extends Object {
 		}
 	}
 
+ /**
+ * beforeRender
+ *
+ * @param object Controller object
+ */
+    public function beforeRender(Controller $controller) {
+    
+    }
+
+/**
+ * shutdown
+ *
+ * @param object Controller object
+ */
+    public function shutdown(Controller $controller) {
+    
+    }
+
 /**
  * Verifies the recaptcha input
  *
@@ -119,12 +137,12 @@ class RecaptchaComponent extends Object {
  * @return boolean True if the response was correct
  */
 	public function verify() {
-		if (isset($this->Controller->params['form']['recaptcha_challenge_field']) && 
-			isset($this->Controller->params['form']['recaptcha_response_field'])) {
+		if (isset($this->Controller->data['recaptcha_challenge_field']) && 
+			isset($this->Controller->data['recaptcha_response_field'])) {
 
 			$response = $this->_getApiResponse();
 			$response = explode("\n", $response);
-
+			
 			if (empty($response[0])) {
 				$this->error = __d('recaptcha', 'Invalid API response, please contact the site admin.', true);
 				return false;
@@ -142,6 +160,7 @@ class RecaptchaComponent extends Object {
 
 			return false;
 		}
+		return false;
 	}
 
 /**
@@ -150,13 +169,16 @@ class RecaptchaComponent extends Object {
  * @return string
  */
 	protected function _getApiResponse() {
-		App::import('Core', 'HttpSocket');
-		$Socket = new HttpSocket();
-		return $Socket->post($this->apiUrl, array(
+		App::uses('HttpSocket', 'Network/Http');
+		$HttpSocket = new HttpSocket();
+		$message = array(
 			'privatekey'=> $this->privateKey,
 			'remoteip' => env('REMOTE_ADDR'),
-			'challenge' => $this->Controller->params['form']['recaptcha_challenge_field'],
-			'response' => $this->Controller->params['form']['recaptcha_response_field']));
+			'challenge' => $this->Controller->data['recaptcha_challenge_field'],
+			'response' => $this->Controller->data['recaptcha_response_field']
+			);
+		$result = $HttpSocket->post($this->apiUrl, $message);
+		return $result;
 	}
 
 }
