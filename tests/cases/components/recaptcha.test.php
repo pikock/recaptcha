@@ -77,8 +77,8 @@ class RecaptchaTestCase extends CakeTestCase {
  * @return void
  */
 	public function testRecaptcha() {
-		$this->Controller->params['form']['recaptcha_challenge_field'] = 'something';
-		$this->Controller->params['form']['recaptcha_response_field'] = 'something';
+		$this->Controller->data['recaptcha_challenge_field'] = 'something';
+		$this->Controller->data['recaptcha_response_field'] = 'something';
 		$this->assertFalse($this->Controller->Recaptcha->verify());
 	}
 
